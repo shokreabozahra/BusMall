@@ -4,7 +4,7 @@
 let leftImageElement = document.getElementById('left');
 let centerImageElement = document.getElementById('center')
 let rightImageElement = document.getElementById('right');
-let maxAttempts = 5;
+let maxAttempts = 25;
 let userAttemptsCounter=0;
 let leftImageIndex ;
 let centerImageIndex;
