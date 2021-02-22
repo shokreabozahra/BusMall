@@ -1,13 +1,17 @@
 
 'use strict';
 
-let clicks = document.getElementById('wrapper');
-let results = document.getElementById('edit');
-let clickTotal = [];
-let itemName = [];
-let clicked = [];
+let leftImageElement = document.getElementById('left');
+let centerImageElement = document.getElementById('center')
+let rightImageElement = document.getElementById('right');
+let maxAttempts = 5;
+let userAttemptsCounter=0;
+let leftImageIndex ;
+let centerImageIndex;
+let rightImageIndex;
 
-function randomInteger () {
+
+function generateRandomIndex () {
   return (Math.floor(Math.random() * Image.all.length));
 }
 
@@ -16,7 +20,7 @@ let Image = function(imgName,source) {
   this.imgName = imgName;
   this.source = source;
   this.votes = 0;
-  this.displayedImage = 0;
+  //this.displayedImage = 0;
   Image.all.push(this);
 };
 Image.all = [];
@@ -43,70 +47,74 @@ new Image('wine-glass', 'img/wine-glass.jpg');
 
 
 
-function displayImage (){   
+function renderThreeImages (){   
   
-  let leftPictureIndex = randomInteger();
-  let centerPictureIndex = randomInteger();
-  let rightPictureIndex = randomInteger();
-  while (centerPictureIndex === leftPictureIndex)
-  {
-    centerPictureIndex = randomInteger();
+  
+  do {
+    leftImageIndex = generateRandomIndex();
+    centerImageIndex = generateRandomIndex();
+     rightImageIndex  =generateRandomIndex();
+    
 
-  }
-  while (rightPictureIndex === leftPictureIndex || rightPictureIndex === centerPictureIndex)
-  {
-    rightPictureIndex = randomInteger();
-  }
-  let leftImg = document.getElementById('left');
-  leftImg.src = Image.all[leftPictureIndex].source;
-  leftImg.alt = Image.all[leftPictureIndex].imgName;
-
-
-  let centerImg = document.getElementById('center');
-  centerImg.src = Image.all[centerPictureIndex].source;
-  centerImg.alt = Image.all[centerPictureIndex].imgName;
-
-  let rightImg = document.getElementById('right');
-  rightImg.src = Image.all[rightPictureIndex].source;
-  rightImg.alt = Image.all[rightPictureIndex].imgName;
-}
-displayImage();
-
-function handleImgClick(event) {
-  let imgid = event.target.id;
-  let imgAlt = event.target.alt;
-
-  if (imgid === 'wrapper') {
-    alert('Please click on an image to vote!');
-  } else if (clickTotal < 25) {
-    for (let i = 0; i < Image.all.length; i++) {
-      if(imgAlt === Image.all[i].imgName) {
-        Image.all[i].votes += 1;
-        clickTotal++;
-      }
-      if (clickTotal === 25) {
-        document.getElementById('edit');
-        edit.style.visibility = 'visible';
-      } else {
-        document.getElementById('edit');
-        edit.style.visibility = 'hidden';
-        displayImage();
-      }
+  
     }
-  }
+  while (leftImageIndex === centerImageIndex || centerImageIndex === rightImageIndex || leftImageIndex===rightImageIndex)
+  
+  leftImageIndex = generateRandomIndex();
+    centerImageIndex = generateRandomIndex();
+     rightImageIndex  =generateRandomIndex();
+
+  Image.all;
+
+   leftImageElement.src = Image.all[leftImageIndex].source;
+  Image.all[leftImageIndex].shown++
+
+
+  centerImageElement.src = Image.all[centerImageIndex].source;
+  Image.all[centerImageIndex].shown++
+
+  rightImageElement.src = Image.all[rightImageIndex].source;
+  Image.all[rightImageIndex].shown++
 }
- function resultsRender(){
-  let ulEl = document.createElement('ul');
-  ulEl.setAttribute('id', 'resultList');
-  document.getElementById('productList').appendChild(ulEl);
+renderThreeImages();
 
-   for (let i = 0; i < Image.all.length; i++) {
-     let liEl = document.createElement('li');
-     liEl.setAttribute('class', 'products');
-     liEl.textContent = Image.all[i].imgName + ' is voted ' + Image.all[i].votes + ' times.';
-     ulEl.appendChild(liEl);
-   }
 
- }
-clicks.addEventListener('click', handleImgClick);
+wrapper.addEventListener('click',handleUserClick);
+
+function handleUserClick(event) {
+  userAttemptsCounter++;
+  
+
+  if (userAttemptsCounter < maxAttempts) {
+   // alert('Please click on an image to vote!');
+  if (event.target.id==='left') {
+    Image.all[leftImageIndex].votes++;
+  } else if (event.target.id==='center') {
+    Image.all[centerImageIndex].votes++;
+  } else if (event.target.id==='right') {
+    Image.all[rightImageIndex].votes++;
+  }
+  renderThreeImages();
+  }
+else  {
+  let getResult;
+   let list =document.getElementById('productList');
+for (let i = 0; i<Image.all.length; i++){
+getResult=document.createElement('li');
+list.appendChild(getResult);
+getResult.textContent = Image.all[i].imgName +  ' has ' + Image.all[i].votes + ' votes';
+}
+wrapper.removeEventListener('click',handleUserClick);
+}
+}
+
+
+
+
+
+ 
+
+
+
+
 
