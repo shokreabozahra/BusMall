@@ -9,19 +9,20 @@ let userAttemptsCounter=0;
 let leftImageIndex ;
 let centerImageIndex;
 let rightImageIndex;
+let imageShown = [];
+let imageVotes = [];
+let imageNames = [];
 
-
-function generateRandomIndex () {
-  return (Math.floor(Math.random() * Image.all.length));
-}
 
 
 let Image = function(imgName,source) {   
   this.imgName = imgName;
   this.source = source;
   this.votes = 0;
-  //this.displayedImage = 0;
+  this.shown = 0;
   Image.all.push(this);
+  imageNames.push(imgName);
+  
 };
 Image.all = [];
 new Image('bag', 'img/bag.jpg');
@@ -45,12 +46,27 @@ new Image('usb', 'img/usb.gif');
 new Image('water-can', 'img/water-can.jpg');
 new Image('wine-glass', 'img/wine-glass.jpg');
 
-
+function generateRandomIndex () {
+  return (Math.floor(Math.random() * Image.all.length));
+}
+function checkDublicate(array1, array2){
+  for (let i = 0; i < array1.length; i++) {
+    for (let j = 0; j < array2.length; j++) {
+        if(array1[i]===array2[j]){
+          return true;
+        }
+      
+    }
+    
+  }
+  return false;
+}
 
 function renderThreeImages (){   
   
-  
+             // let newArray = generateIndexArray(3);
   do {
+          //  newArray = generateIndexArray(3);
     leftImageIndex = generateRandomIndex();
     centerImageIndex = generateRandomIndex();
      rightImageIndex  =generateRandomIndex();
@@ -59,22 +75,19 @@ function renderThreeImages (){
   
     }
   while (leftImageIndex === centerImageIndex || centerImageIndex === rightImageIndex || leftImageIndex===rightImageIndex)
-  
-  leftImageIndex = generateRandomIndex();
-    centerImageIndex = generateRandomIndex();
-     rightImageIndex  =generateRandomIndex();
-
-  Image.all;
-
+   
+  Image.all
+    
    leftImageElement.src = Image.all[leftImageIndex].source;
-  Image.all[leftImageIndex].shown++
+  Image.all[leftImageIndex].shown++;
 
 
   centerImageElement.src = Image.all[centerImageIndex].source;
-  Image.all[centerImageIndex].shown++
+  Image.all[centerImageIndex].shown++;
 
   rightImageElement.src = Image.all[rightImageIndex].source;
-  Image.all[rightImageIndex].shown++
+  Image.all[rightImageIndex].shown++;
+  
 }
 renderThreeImages();
 
@@ -85,12 +98,14 @@ function handleUserClick(event) {
   userAttemptsCounter++;
   
 
-  if (userAttemptsCounter < maxAttempts) {
-   // alert('Please click on an image to vote!');
+  if (userAttemptsCounter <= maxAttempts) {
+
   if (event.target.id==='left') {
     Image.all[leftImageIndex].votes++;
+
   } else if (event.target.id==='center') {
     Image.all[centerImageIndex].votes++;
+
   } else if (event.target.id==='right') {
     Image.all[rightImageIndex].votes++;
   }
@@ -99,16 +114,71 @@ function handleUserClick(event) {
 else  {
   let getResult;
    let list =document.getElementById('productList');
+
 for (let i = 0; i<Image.all.length; i++){
 getResult=document.createElement('li');
 list.appendChild(getResult);
-getResult.textContent = Image.all[i].imgName +  ' has ' + Image.all[i].votes + ' votes';
+getResult.textContent = Image.all[i].imgName +  ' has ' + Image.all[i].votes + ' votes'+ ' and ' + Image.all[i].shown +' shown';
 }
 wrapper.removeEventListener('click',handleUserClick);
+
+for (let i = 0; i < Image.all.length; i++) {
+  // 0
+  imageVotes.push(Image.all[i].votes);
+
+  imageShown.push(Image.all[i].shown);
+}
+
+
+
+
+viewChart();
+
+
 }
 }
 
 
+
+
+function viewChart() {
+
+  let ctx = document.getElementById('myChart').getContext('2d');
+
+  let chart = new Chart(ctx, {
+
+    type: 'bar',
+
+    
+    data: {
+      labels: imageNames,
+
+      datasets: [
+
+
+        {
+          label: 'Image Votes',
+          backgroundColor: 'blue',
+          borderColor: 'blue',
+          data: imageVotes
+        },
+        
+        {
+          label: 'Image Shown',
+          backgroundColor: 'red',
+          borderColor: 'red',
+          data: imageShown
+        },
+   
+
+      ]
+    },
+    
+    options: {}
+  });
+  
+
+}
 
 
 
