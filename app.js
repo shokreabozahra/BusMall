@@ -22,8 +22,8 @@ let Image = function(imgName,source) {
   this.shown = 0;
   Image.all.push(this);
   imageNames.push(imgName);
-  
 };
+
 Image.all = [];
 new Image('bag', 'img/bag.jpg');
 new Image('banana', 'img/banana.jpg');
@@ -49,24 +49,13 @@ new Image('wine-glass', 'img/wine-glass.jpg');
 function generateRandomIndex () {
   return (Math.floor(Math.random() * Image.all.length));
 }
-function checkDublicate(array1, array2){
-  for (let i = 0; i < array1.length; i++) {
-    for (let j = 0; j < array2.length; j++) {
-        if(array1[i]===array2[j]){
-          return true;
-        }
-      
-    }
-    
-  }
-  return false;
-}
+
+ 
 
 function renderThreeImages (){   
   
-             // let newArray = generateIndexArray(3);
+            
   do {
-          //  newArray = generateIndexArray(3);
     leftImageIndex = generateRandomIndex();
     centerImageIndex = generateRandomIndex();
      rightImageIndex  =generateRandomIndex();
@@ -129,7 +118,8 @@ for (let i = 0; i < Image.all.length; i++) {
   imageShown.push(Image.all[i].shown);
 }
 
-
+let data = JSON.stringify(Image.all);
+localStorage.setItem('image', data);
 
 
 viewChart();
@@ -158,15 +148,15 @@ function viewChart() {
 
         {
           label: 'Image Votes',
-          backgroundColor: 'blue',
-          borderColor: 'blue',
+          backgroundColor: 'red',
+          borderColor: 'red',
           data: imageVotes
         },
         
         {
           label: 'Image Shown',
-          backgroundColor: 'red',
-          borderColor: 'red',
+          backgroundColor: '#ffa600',
+          borderColor: '#ffa600',
           data: imageShown
         },
    
@@ -182,6 +172,25 @@ function viewChart() {
 
 
 
+function gettingItems() {
+  
+  let stringObject = localStorage.getItem('image');
+  let normalObject = JSON.parse(stringObject);
+  if (normalObject !== null) {
+    Image.all=normalObject
+
+    for (let i = 0; i < normalObject.length; i++) {
+
+      let norObject = normalObject[i];
+      let currentInstance = Image.all[i];
+      currentInstance.votes = norObject.votes;
+      currentInstance.shown = norObject.shown;
+    }
+
+  }
+  renderThreeImages();
+}
+gettingItems();
  
 
 

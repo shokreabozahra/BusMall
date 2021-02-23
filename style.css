@@ -1,0 +1,15 @@
+body  {
+  background-image: url(https://www.teahub.io/photos/full/93-938757_75-web-website-background-color.jpg);
+  background-color: #cccccc;
+}
+h1{
+    color: rgb(0, 0, 0);
+    margin-left: 350px;
+}
+#wrapper{
+    margin-left: 200px;
+}
+h2{
+    color: rgb(99, 16, 16);
+    margin-left: 250px;
+}
