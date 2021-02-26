@@ -12,7 +12,7 @@ let rightImageIndex;
 let imageShown = [];
 let imageVotes = [];
 let imageNames = [];
-
+let oldImages=[];
 
 
 let Image = function(imgName,source) {   
@@ -47,7 +47,7 @@ new Image('water-can', 'img/water-can.jpg');
 new Image('wine-glass', 'img/wine-glass.jpg');
 
 function generateRandomIndex () {
-  return (Math.floor(Math.random() * Image.all.length));
+  return Math.floor(Math.random() * Image.all.length);
 }
 
  
@@ -58,12 +58,12 @@ function renderThreeImages (){
   do {
     leftImageIndex = generateRandomIndex();
     centerImageIndex = generateRandomIndex();
-     rightImageIndex  =generateRandomIndex();
+     rightImageIndex  = generateRandomIndex();
     
 
   
     }
-  while (leftImageIndex === centerImageIndex || centerImageIndex === rightImageIndex || leftImageIndex===rightImageIndex)
+  while ((leftImageIndex === centerImageIndex || leftImageIndex === rightImageIndex || centerImageIndex===rightImageIndex)||oldImages.includes(leftImageIndex)||oldImages.includes(centerImageIndex)||oldImages.includes(rightImageIndex))
    
   Image.all
     
@@ -76,6 +76,8 @@ function renderThreeImages (){
 
   rightImageElement.src = Image.all[rightImageIndex].source;
   Image.all[rightImageIndex].shown++;
+
+   oldImages=[leftImageIndex,centerImageIndex,rightImageIndex];
   
 }
 renderThreeImages();
